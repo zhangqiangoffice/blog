@@ -1,5 +1,6 @@
 $(document).ready(function(){
   $registerBox = $('#registerBox');
+  $loginBox = $('#loginBox');
 
   $registerBox.find('button').on('click', function(){
     $.ajax({
@@ -12,7 +13,13 @@ $(document).ready(function(){
       },
       dataType: 'json',
       success: function(msg) {
-        console.log(msg)
+        $registerBox.find('.tip').html(msg.message)
+        if (!msg.code) {
+          setTimeout(() => {
+            $loginBox.show()
+            $registerBox.hide()
+          }, 1000)
+        }
       }
     })
   })

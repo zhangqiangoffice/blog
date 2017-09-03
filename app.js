@@ -2,11 +2,13 @@ var express = require('express')
 var app = express()
 var swig = require('swig')
 var mongoose = require('mongoose')
+var bodyParser = require('body-parser')
 
 app.use('/public', express.static(__dirname + '/public'))
 app.engine('html', swig.renderFile)
 app.set('views', './views')
 app.set('view engine', 'html')
+app.use(bodyParser.urlencoded({extended: true}))
 
 swig.setDefaults({cache: false})
 
