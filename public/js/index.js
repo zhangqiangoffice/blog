@@ -38,11 +38,33 @@ $(document).ready(function(){
         $loginBox.find('.tip').html(msg.message)
         if (!msg.code) {
           setTimeout(() => {
-            $loginBox.hide()
-            $userInfo.show()
+            window.location.reload()
           }, 1000)
         }
       }
     })
+  })
+
+  $('#logout').click(function(){
+    $.ajax({
+      type: 'get',
+      url: 'api/user/logout',
+      dataType: 'json',
+      success: function(msg) {
+        if (!msg.code) {
+          window.location.reload()
+        }
+      }
+    })
+  })
+
+  $('#toLogin').click(function(){
+    $loginBox.show()
+    $registerBox.hide()
+  })
+
+  $('#toRegister').click(function(){
+    $loginBox.hide()
+    $registerBox.show()
   })
 })

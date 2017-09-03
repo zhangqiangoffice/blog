@@ -80,9 +80,18 @@ router.post('/user/login', (req, res, next) => {
       _id: userInfo._id,
       username: userInfo.username
     }
+    req.cookies.set('userInfo', JSON.stringify({
+      _id: userInfo._id,
+      username: userInfo.username
+    }))
     res.json(responseData)
     return
   })
+})
+
+router.get('/user/logout', (req, res, next) => {
+  req.cookies.set('userInfo', null)
+  res.json(responseData)
 })
 
 module.exports = router

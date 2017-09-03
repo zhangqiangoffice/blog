@@ -22,18 +22,24 @@
       <a href="">Express</a>
     </div>
   </nav>
+
+  {% if userInfo._id %}
   <div id="userInfo">
     <div>用户信息</div>
-    你好，<span class="username"></span>
+    你好，<span class="username">{{ userInfo.username }}</span>
     <p>欢迎来到我的博客</p>
+    <a href="#" id="logout">退出</a>
   </div>
 
-  <div id="registerBox">
+  {% else %}
+
+  <div id="registerBox" style="display: none">
     <div>注册</div>
     <input type="text" name="username" placeholder="请输入用户名" >
     <input type="password" name="password" placeholder="请输入密码">
     <input type="password" name="repassword" placeholder="请再次输入密码">
     <button type="button">注册</button>
+    <a href="javascript:;" id="toLogin">去登录</a>
     <span class="tip"></span>
   </div>
 
@@ -42,8 +48,12 @@
     <input type="text" name="username" placeholder="请输入用户名" >
     <input type="password" name="password" placeholder="请输入密码">
     <button type="button">登录</button>
+    <a href="javascript:;" id="toRegister">去注册</a>
     <span class="tip"></span>
   </div>
+
+  {% endif %}
+
   <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="/public/js/index.js"></script>

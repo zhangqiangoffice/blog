@@ -3,12 +3,24 @@ var app = express()
 var swig = require('swig')
 var mongoose = require('mongoose')
 var bodyParser = require('body-parser')
+var cookies = require('cookies')
 
 app.use('/public', express.static(__dirname + '/public'))
 app.engine('html', swig.renderFile)
 app.set('views', './views')
 app.set('view engine', 'html')
 app.use(bodyParser.urlencoded({extended: true}))
+app.use((req, res, next) => {
+  req.cookies = new cookies(req, res)
+  req.userInfo = {}
+  var cookiesInfo = req.cookies.get('userInfo')
+  if (cookiesInfo) {
+    try {
+      req.userInfo = JSON.parse(cookiesInfo)
+    } catch(e) {}
+  }
+  next()
+})
 
 swig.setDefaults({cache: false})
 
