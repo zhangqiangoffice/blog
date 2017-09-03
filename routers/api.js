@@ -51,6 +51,9 @@ router.post('/user/register', (req, res, next) => {
       password: password
     })
     return user.save()
+  }).then(newUserInfo => {
+    responseData.message = '注册成功'
+    res.json(responseData)
   })
 })
 
