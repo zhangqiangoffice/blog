@@ -27,7 +27,16 @@
   <div id="userInfo">
     <div>用户信息</div>
     你好，<span class="username">{{ userInfo.username }}</span>
+    
+    {% if userInfo.isAdmin %}
+    
+    <p>你是管理员，前往<a href="/admin">管理页面</a></p>
+
+    {% else %}
+
     <p>欢迎来到我的博客</p>
+
+    {% endif %}
     <a href="#" id="logout">退出</a>
   </div>
 

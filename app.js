@@ -4,6 +4,7 @@ var swig = require('swig')
 var mongoose = require('mongoose')
 var bodyParser = require('body-parser')
 var cookies = require('cookies')
+var User = require('./models/User')
 
 app.use('/public', express.static(__dirname + '/public'))
 app.engine('html', swig.renderFile)
@@ -17,9 +18,19 @@ app.use((req, res, next) => {
   if (cookiesInfo) {
     try {
       req.userInfo = JSON.parse(cookiesInfo)
-    } catch(e) {}
+
+      User.findById(req.userInfo._id).then(userInfo => {
+        console.log(userInfo)
+        req.userInfo.isAdmin = Boolean(userInfo.isAdmin)
+        next()
+      })
+    } catch(e) {
+      next()
+    }
+  } else {
+    next()
   }
-  next()
+  
 })
 
 swig.setDefaults({cache: false})

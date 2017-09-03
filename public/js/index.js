@@ -39,7 +39,7 @@ $(document).ready(function(){
         if (!msg.code) {
           setTimeout(() => {
             window.location.reload()
-          }, 1000)
+          }, 500)
         }
       }
     })
