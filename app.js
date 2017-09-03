@@ -12,7 +12,7 @@ swig.setDefaults({cache: false})
 
 app.use('/admin', require('./routers/admin'))
 app.use('/api', require('./routers/api'))
-app.use('/main', require('./routers/main'))
+app.use('/', require('./routers/main'))
 
 mongoose.connect('mongodb://localhost:27018/blog', err => {
   if (err) {
