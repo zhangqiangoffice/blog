@@ -19,12 +19,30 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/user', (req, res, next) => {
-  User.find().then(users => {
-    res.render('admin/user_index',{
-      userInfo: req.userInfo,
-      users: users
+  
+  var page = Number(req.query.page) || 1
+  var limit = 10
+  var pages = 0
+  
+  User.count().then(count => {
+    
+    pages = Math.ceil(count / limit)
+    page = Math.min(page, pages)
+    page = Math.max(page, 1)
+    var skip = (page - 1) * limit
+    
+    User.find().limit(limit).skip(skip).then(users => {
+      res.render('admin/user_index', {
+        userInfo: req.userInfo,
+        users: users,
+        page: page,
+        count: count,
+        limit: limit,
+        pages: pages,
+      })
     })
   })
+  
   
 })
 
