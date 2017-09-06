@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var User = require('../models/User')
+var Category = require('../models/Category')
 
 router.use((req, res, next) => {
 
@@ -42,8 +43,59 @@ router.get('/user', (req, res, next) => {
       })
     })
   })
-  
-  
+})
+
+router.get('/category', (req, res) => {
+  res.render('admin/category_index', {
+    userInfo: req.userInfo,
+    // users: users,
+    // page: page,
+    // count: count,
+    // limit: limit,
+    // pages: pages,
+  })
+})
+
+router.get('/category/add', (req, res) => {
+  res.render('admin/category_add', {
+    userInfo: req.userInfo,
+    // users: users,
+    // page: page,
+    // count: count,
+    // limit: limit,
+    // pages: pages,
+  })
+})
+
+router.post('/category/add', (req, res) => {
+  var name = req.body.name || ''
+  if (name === '') {
+    res.render('admin/error', {
+      userInfo: req.userInfo,
+      message: '名称不能为空！',
+    })
+    return
+  }
+
+  Category.findOne({name: name}).then(rs => {
+    if (rs) {
+      res.render('admin/error', {
+        userInfo: req.userInfo,
+        message: '分类已经存在了！',
+      })
+      return Promise.reject()
+    } else {
+      return new Category({
+        name: name
+      }).save()
+    }
+  }).then(newCategory => {
+    res.render('admin/success', {
+      userInfo: req.userInfo,
+      message: '分类保存成功！',
+      url: '/admin/category'
+    })
+  })
 })
 
 module.exports = router
