@@ -2,6 +2,8 @@ var express = require('express')
 var router = express.Router()
 var User = require('../models/User')
 var Category = require('../models/Category')
+var Content = require('../models/Content')
+
 
 router.use((req, res, next) => {
 
@@ -193,6 +195,73 @@ router.get('/category/delete', (req, res) => {
       message: '删除成功',
     })
   })
+})
+
+router.get('/content', (req, res) => {
+  var page = Number(req.query.page) || 1
+  var limit = 10
+  var pages = 0
+  
+  Content.count().then(count => {
+    
+    pages = Math.ceil(count / limit)
+    page = Math.min(page, pages)
+    page = Math.max(page, 1)
+    var skip = (page - 1) * limit
+    
+    Content.find().sort({_id: -1}).limit(limit).skip(skip).populate('category').then(contents => {
+      res.render('admin/content_index', {
+        userInfo: req.userInfo,
+        contents: contents,
+        page: page,
+        count: count,
+        limit: limit,
+        pages: pages,
+      })
+    })
+  })
+})
+
+router.get('/content/add', (req, res) => {
+  
+  Category.find().then(categories => {
+    
+    res.render('admin/content_add', {
+      userInfo: req.userInfo,
+      categories: categories,
+    })
+  })
+})
+
+router.post('/content/add', (req, res) => {
+  
+  if (req.body.category === '') {
+    res.render('admin/error', {
+      userInfo: req.userInfo,
+      message: '内容分类不能为空！'
+    })
+  } 
+
+  if (req.body.category === '') {
+    res.render('admin/error', {
+      userInfo: req.userInfo,
+      message: '内容标题不能为空！'
+    })
+  }
+
+  new Content({
+    category: req.body.category,
+    title: req.body.title,
+    description: req.body.description,
+    content: req.body.content,
+  }).save().then(rs => {
+    res.render('admin/success', {
+      userInfo: req.userInfo,
+      message: '内容保存成功！',
+      url: '/admin/content'
+    })
+  })
 
 })
+
 module.exports = router
