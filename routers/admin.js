@@ -192,7 +192,7 @@ router.get('/category/delete', (req, res) => {
   Category.remove({_id: id}).then(() => {
     res.render('admin/success', {
       userInfo: req.userInfo,
-      message: '删除成功',
+      message: '分类删除成功',
     })
   })
 })
@@ -261,7 +261,87 @@ router.post('/content/add', (req, res) => {
       url: '/admin/content'
     })
   })
+})
 
+router.get('/content/edit', (req, res) => {
+  var id = req.query.id || ''
+  var categories = []
+
+  Category.find().then(rs => {
+    categories = rs
+    return Content.findOne({_id: id}).populate('category')
+  }).then(content => {
+    if (!content) {
+      res.render('admin/error',{
+        userInfo: req.userInfo,
+        message: '指定内容不存在！'
+      })
+    } else {
+      res.render('admin/content_edit', {
+        userInfo: req.userInfo,
+        content: content,
+        categories: categories
+      })
+    }
+  })
+})
+
+router.post('/content/edit', (req, res) => {
+  var id = req.query.id || ''
+
+  if (id === '' ) {
+    res.render('admin/error', {
+      userInfo: req.userInfo,
+      message: '内容ID不能为空！'
+    })
+  }
+
+  if (req.body.category === '') {
+    res.render('admin/error', {
+      userInfo: req.userInfo,
+      message: '内容分类不能为空！'
+    })
+  } 
+
+  if (req.body.category === '') {
+    res.render('admin/error', {
+      userInfo: req.userInfo,
+      message: '内容标题不能为空！'
+    })
+  }
+
+  Content.update({
+    _id: id,
+  },{
+    category: req.body.category,
+    title: req.body.title,
+    description: req.body.description,
+    content: req.body.content,
+  }).then(() => {
+    res.render('admin/success', {
+      userInfo: req.userInfo,
+      message: '内容修改成功！',
+      url: '/admin/content'
+    })
+  })
+})
+
+router.get('/content/delete', (req, res) => {
+  var id = req.query.id || ''
+
+  if (id === '' ) {
+    res.render('admin/error', {
+      userInfo: req.userInfo,
+      message: '内容ID不能为空！'
+    })
+  }
+
+  Content.remove({_id: id}).then(() => {
+    res.render('admin/success', {
+      userInfo: req.userInfo,
+      message: '内容删除成功',
+    })
+  })
 })
 
 module.exports = router
