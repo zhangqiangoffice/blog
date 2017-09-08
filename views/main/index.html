@@ -14,9 +14,9 @@
   </header>
   <nav>
     <div class="menu">
-      <a class="active" href="/">首页</a>
-      {% for category in categories %}
-      <a href="#">{{ category.name }}</a>
+      <a {% if category == '' %}class="active"{% endif %} href="/">首页</a>
+      {% for cate in categories %}
+      <a href="/?category={{cate.id}}" {% if category == cate.id %}class="active"{% endif %}>{{ cate.name }}</a>
       {% endfor %}
     </div>
   </nav>
@@ -24,6 +24,10 @@
   <div class="main">
     <div class="left">
 
+      {% if contents.length == 0 %}
+      <div class="list_box"><h2>目前该分类下还没有文章</h2></div>
+      {% endif %}
+      
       {% for content in contents%}
       <div class="list_box">
         <h1>{{content.title}}</h1>
@@ -43,15 +47,20 @@
           {% if page <= 1 %}
           <span>没有上一页了</span>
           {% else %}
-          <a href="/?page={{ page - 1 }}">上一页</a>
+          <a href="/category={{category}}&?page={{ page - 1 }}">上一页</a>
           {% endif%}
         </li>
-        <li class="num">{{ page }} / {{ pages }}</li>
+        
+        <li class="num">
+          {% if pages > 0 %}
+            {{ page }} / {{ pages }}
+          {% endif %}
+        </li>
         <li class="next">
           {% if page >= pages %}
           <span>没有下一页了</span>
           {% else %}
-          <a href="/?page={{ page + 1 }}">下一页</a>
+          <a href="/?category={{category}}&page={{ page + 1 }}">下一页</a>
           {% endif%}
         </li>
       </ul>
