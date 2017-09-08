@@ -142,3 +142,39 @@ body {
 .pager .num {
     line-height: 30px;
 }
+
+.list_box h3 {
+    font-size: 18px;
+}
+
+.list_box .em {
+    float: right;
+    font-size: 14px;
+}
+
+.list_box em {
+    color: #0CD5D7;
+}
+
+.text_input textarea {
+    border: 1px solid #0F5CBA;
+    width: 600px;
+    height: 80px;
+    float: left;
+    text-indent: 5px;
+    resize:none;
+}
+
+.text_input button{
+    width: 80px;
+    height: 80px;
+    background-color: #0F5CBA;
+    color: #fff;
+    border: 1px solid #0F5CBA;
+    font-size: 18px;
+}
+
+.message_box {
+    margin: 20px 0;
+    border-bottom: 1px dashed #ccc;
+}
