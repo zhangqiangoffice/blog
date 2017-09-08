@@ -17,12 +17,12 @@
     <h3>
         <strong>评论</strong>
         <span class="em">一共有 <em class="message_count">{{content.comments.length}}</em> 条评论</span>
+        <input type="hidden" id="content_id" value="{{content.id}}">
     </h3>
     
     {% if userInfo._id %}
     <p class="text_input clearfix">
         <textarea name="" id="message_content" cols="30" rows="10"></textarea>
-        <input type="hidden" id="content_id" value="{{content.id}}">
         <button id="message_btn" class="submit">提交</button>
     </p>
     {% else %}
