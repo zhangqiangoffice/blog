@@ -13,7 +13,7 @@
     作者：<span>{{content.user.username}}</span> -
     时间：<span>{{content.addTime | date('Y年m月d日 H:i:s', -8*60) }}</span> -
     阅读：<span>{{content.views}}</span> -
-    评论：<span></span>
+    评论：<span>{{content.comments.length}}</span>
   </p>
   <p>{{content.description}}</p>
   <div class="function"><a href="/view?contentid={{content.id}}" class="btn btn-warning">阅读全文</a></div>

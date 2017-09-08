@@ -95,6 +95,15 @@ router.get('/user/logout', (req, res, next) => {
   res.json(responseData)
 })
 
+router.get('/comment', (req, res) => {
+  var contentId = req.query.contentid || ''
+
+  Content.findOne({_id: contentId}).then(content => {
+    responseData.comments = content.comments
+    res.json(responseData)
+  })
+})
+
 router.post('/comment/post', (req, res, next) => {
   var contentId = req.body.contentId || ''
   var postData = {
