@@ -3,30 +3,34 @@ var router = express.Router()
 var Category = require('../models/Category')
 var Content = require('../models/Content')
 
+var data
+
+router.use((req, res, next) => {
+  data = {
+    userInfo: req.userInfo,
+    categories: [],
+  }
+  
+  Category.find().then(categories => {
+    data.categories = categories
+    next()
+  })
+})
+
 router.get('/', (req, res, next) => {
   
-  var data = {
-    userInfo: req.userInfo,
-    category: req.query.category || '',
-    categories: [],
-    count: 0,
-    page: Number(req.query.page || 1),
-    limit: 2,
-    pages: 0
-  }
+  data.category = req.query.category || ''
+  data.count = 0
+  data.page = Number(req.query.page || 1)
+  data.limit = 10
+  data.pages = 0
 
   var where = {}
   if (data.category) {
     where.category = data.category
   }
-
-
   
-  Category.find().then(categories => {
-    
-    data.categories = categories
-    return Content.where(where).count()
-  }).then(count => {
+  Content.where(where).count().then(count => {
     data.count = count
     data.pages = Math.ceil(count / data.limit)
     data.page = Math.min(data.page, data.pages)
@@ -37,6 +41,19 @@ router.get('/', (req, res, next) => {
   }).then((contents)=> {
     data.contents = contents
     res.render('main/index', data)
+  })
+})
+
+router.get('/view', (req, res) => {
+  var contentId = req.query.contentid || ''
+
+  Content.findOne({_id: contentId}).then(content => {
+    data.content = content
+
+    content.views++
+    content.save()
+    
+    res.render('main/view', data)
   })
 })
 

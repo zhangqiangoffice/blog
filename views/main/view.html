@@ -2,23 +2,16 @@
 
 {% block content%}
 
-{% if contents.length == 0 %}
-<div class="list_box"><h2>目前该分类下还没有文章</h2></div>
-{% endif %}
-
-{% for content in contents%}
 <div class="list_box">
   <h1>{{content.title}}</h1>
   <p class="col_default">
     作者：<span>{{content.user.username}}</span> -
-    时间：<span>{{content.addTime | date('Y年m月d日 H:i:s', -8*60) }}</span> -
+    时间：<span>{{ content.addTime | date('Y年m月d日 H:i:s', -8*60) }}</span> -
     阅读：<span>{{content.views}}</span> -
-    评论：<span></span>
+    评论：<span>10</span>
   </p>
-  <p>{{content.description}}</p>
-  <div class="function"><a href="/view?contentid={{content.id}}" class="btn btn-warning">阅读全文</a></div>
+  <p>{{content.content}}</p>
 </div>
-{% endfor %}
 
 <ul class="pager">
   <li class="previous">
