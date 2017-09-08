@@ -23,9 +23,39 @@
 
   <div class="main">
     <div class="left">
-      <div class="blank">
-        asdfasdfasdf
+
+      {% for content in contents%}
+      <div class="list_box">
+        <h1>{{content.title}}</h1>
+        <p class="col_default">
+          作者：<span>{{content.user.username}}</span> -
+          时间：<span>{{ content.addTime | date('Y年m月d日 H:i:s', -8*60) }}</span> -
+          阅读：<span>{{content.views}}</span> -
+          评论：<span>10</span>
+        </p>
+        <p>{{content.description}}</p>
+        <div class="function"><a href="javascript:''" class="btn btn-warning">阅读全文</a></div>
       </div>
+      {% endfor %}
+
+      <ul class="pager">
+        <li class="previous">
+          {% if page <= 1 %}
+          <span>没有上一页了</span>
+          {% else %}
+          <a href="/?page={{ page - 1 }}">上一页</a>
+          {% endif%}
+        </li>
+        <li class="num">{{ page }} / {{ pages }}</li>
+        <li class="next">
+          {% if page >= pages %}
+          <span>没有下一页了</span>
+          {% else %}
+          <a href="/?page={{ page + 1 }}">下一页</a>
+          {% endif%}
+        </li>
+      </ul>
+
     </div>
     <div class="right">
       {% if userInfo._id %}
@@ -35,7 +65,7 @@
         
         {% if userInfo.isAdmin %}
         
-        <p>你是管理员，前往<a href="/admin">管理页面</a></p>
+        <p>你是管理员，前往 <a href="/admin">管理页面</a></p>
     
         {% else %}
     
@@ -104,7 +134,6 @@
       {% endif %}
     </div>
   </div>
-
 
   <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

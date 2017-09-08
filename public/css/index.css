@@ -115,8 +115,30 @@ body {
     margin-top: 10px;
 }
 
-.blank {
+.list_box {
     width: 720px;
     background-color: #fff;
-    padding: 30px 20px;
+    padding: 15px 20px 25px;
+    margin-bottom: 25px;
+}
+
+.list_box h1, .col_default {
+    text-align: center;
+}
+
+.col_default span {
+    color: #0CD5D7;
+}
+
+.function {
+    margin-top: 20px;
+}
+
+.pager {
+    background-color: #fff;
+    padding: 20px 50px;
+}
+
+.pager .num {
+    line-height: 30px;
 }
