@@ -209,7 +209,7 @@ router.get('/content', (req, res) => {
     page = Math.max(page, 1)
     var skip = (page - 1) * limit
     
-    Content.find().sort({_id: -1}).limit(limit).skip(skip).populate('category').then(contents => {
+    Content.find().sort({_id: -1}).limit(limit).skip(skip).populate(['category', 'user']).then(contents => {
       res.render('admin/content_index', {
         userInfo: req.userInfo,
         contents: contents,
@@ -252,6 +252,7 @@ router.post('/content/add', (req, res) => {
   new Content({
     category: req.body.category,
     title: req.body.title,
+    user: req.userInfo._id.toString(),
     description: req.body.description,
     content: req.body.content,
   }).save().then(rs => {
@@ -317,6 +318,7 @@ router.post('/content/edit', (req, res) => {
     title: req.body.title,
     description: req.body.description,
     content: req.body.content,
+    addTime: new Date(),
   }).then(() => {
     res.render('admin/success', {
       userInfo: req.userInfo,
