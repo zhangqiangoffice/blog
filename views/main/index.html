@@ -1,70 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>博客</title>
-</head>
-<body>
-  <header>
-    <div class="backimg"><img src="" alt="backimg"></div>
-    <div class="logo"><img src="" alt="logo"></div>
-  </header>
-  <nav>
-    <div class="menu">
-      <a href="/">首页</a>
-      <a href="">HTML5</a>
-      <a href="">CSS</a>
-      <a href="">Javascript</a>
-      <a href="">PHP</a>
-      <a href="">Java</a>
-      <a href="">Express</a>
-    </div>
-  </nav>
+{% extends 'layout.html' %}
 
-  {% if userInfo._id %}
-  <div id="userInfo">
-    <div>用户信息</div>
-    你好，<span class="username">{{ userInfo.username }}</span>
-    
-    {% if userInfo.isAdmin %}
-    
-    <p>你是管理员，前往<a href="/admin">管理页面</a></p>
+{% block content%}
 
+{% if contents.length == 0 %}
+<div class="list_box"><h2>目前该分类下还没有文章</h2></div>
+{% endif %}
+
+{% for content in contents%}
+<div class="list_box">
+  <h1>{{content.title}}</h1>
+  <p class="col_default">
+    作者：<span>{{content.user.username}}</span> -
+    时间：<span>{{content.addTime | date('Y年m月d日 H:i:s', -8*60) }}</span> -
+    阅读：<span>{{content.views}}</span> -
+    评论：<span>{{content.comments.length}}</span>
+  </p>
+  <p>{{content.description}}</p>
+  <div class="function"><a href="/view?contentid={{content.id}}" class="btn btn-warning">阅读全文</a></div>
+</div>
+{% endfor %}
+
+<ul class="pager">
+  <li class="previous">
+    {% if page <= 1 %}
+    <span>没有上一页了</span>
     {% else %}
-
-    <p>欢迎来到我的博客</p>
-
+    <a href="/?category={{category}}&page={{ page - 1 }}">上一页</a>
+    {% endif%}
+  </li>
+  
+  <li class="num">
+    {% if pages > 0 %}
+      {{ page }} / {{ pages }}
     {% endif %}
-    <a href="#" id="logout">退出</a>
-  </div>
+  </li>
+  <li class="next">
+    {% if page >= pages %}
+    <span>没有下一页了</span>
+    {% else %}
+    <a href="/?category={{category}}&page={{ page + 1 }}">下一页</a>
+    {% endif%}
+  </li>
+</ul>
 
-  {% else %}
-
-  <div id="registerBox" style="display: none">
-    <div>注册</div>
-    <input type="text" name="username" placeholder="请输入用户名" >
-    <input type="password" name="password" placeholder="请输入密码">
-    <input type="password" name="repassword" placeholder="请再次输入密码">
-    <button type="button">注册</button>
-    <a href="javascript:;" id="toLogin">去登录</a>
-    <span class="tip"></span>
-  </div>
-
-  <div id="loginBox">
-    <div>登录</div>
-    <input type="text" name="username" placeholder="请输入用户名" >
-    <input type="password" name="password" placeholder="请输入密码">
-    <button type="button">登录</button>
-    <a href="javascript:;" id="toRegister">去注册</a>
-    <span class="tip"></span>
-  </div>
-
-  {% endif %}
-
-  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="/public/js/index.js"></script>
-</body>
-</html>
+{% endblock %}

@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var User = require('../models/User')
+var Content = require('../models/Content')
 
 var responseData = {}
 
@@ -92,6 +93,35 @@ router.post('/user/login', (req, res, next) => {
 router.get('/user/logout', (req, res, next) => {
   req.cookies.set('userInfo', null)
   res.json(responseData)
+})
+
+router.get('/comment', (req, res) => {
+  var contentId = req.query.contentid || ''
+
+  Content.findOne({_id: contentId}).then(content => {
+    responseData.comments = content.comments
+    res.json(responseData)
+  })
+})
+
+router.post('/comment/post', (req, res, next) => {
+  var contentId = req.body.contentId || ''
+  var postData = {
+    username: req.userInfo.username,
+    postTime: new Date(),
+    content: req.body.content
+  }
+  
+  Content.findOne({_id: contentId}).then(content => {
+    content.comments.push(postData)
+    return content.save()
+  }).then(newContent => {
+    responseData.message = '评论成功'
+    responseData.comments = newContent.comments
+    res.json(responseData)
+  })
+
+
 })
 
 module.exports = router
