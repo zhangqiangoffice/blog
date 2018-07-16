@@ -28,5 +28,13 @@
     "markdown": "^0.5.0",
     "mongoose": "^4.11.9",
     "swig": "^1.4.2"
+  },
+  "devDependencies": {
+    "eslint": "5.1.0",
+    "eslint-config-standard": "11.0.0",
+    "eslint-plugin-import": "2.13.0",
+    "eslint-plugin-node": "6.0.1",
+    "eslint-plugin-promise": "3.8.0",
+    "eslint-plugin-standard": "3.1.0"
   }
 }
