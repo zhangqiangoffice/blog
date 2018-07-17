@@ -5,6 +5,7 @@ var mongoose = require('mongoose')
 var bodyParser = require('body-parser')
 var cookies = require('cookies')
 var User = require('./models/User')
+const config = require('config-lite')(__dirname)
 
 app.use('/public', express.static(__dirname + '/public'))
 app.engine('html', swig.renderFile)
@@ -23,13 +24,12 @@ app.use((req, res, next) => {
         req.userInfo.isAdmin = Boolean(userInfo.isAdmin)
         next()
       })
-    } catch(e) {
+    } catch (e) {
       next()
     }
   } else {
     next()
   }
-  
 })
 
 swig.setDefaults({cache: false})
@@ -38,14 +38,13 @@ app.use('/admin', require('./routers/admin'))
 app.use('/api', require('./routers/api'))
 app.use('/', require('./routers/main'))
 
-mongoose.connect('mongodb://zhanglemeng:zhanglemeng@ds044689.mlab.com:44689/blog', err => {
+mongoose.connect(config.mongodb, err => {
   if (err) {
     console.log('数据库连接失败')
   } else {
     console.log('数据库连接成功')
-    app.listen(8081, () => {
-      console.log('server is listening at 8081 ...')
+    app.listen(config.port, () => {
+      console.log(`server is listening at ${config.port} ...`)
     })
-
   }
 })
