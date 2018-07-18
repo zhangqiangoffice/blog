@@ -27,9 +27,11 @@
     "config-lite": "2.1.0",
     "cookies": "^0.7.1",
     "express": "^4.15.4",
+    "file-stream-rotator": "0.2.1",
     "markdown": "^0.5.0",
     "marked": "0.4.0",
     "mongoose": "^4.11.9",
+    "morgan": "1.9.0",
     "swig": "^1.4.2"
   },
   "devDependencies": {

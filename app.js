@@ -1,16 +1,36 @@
-var express = require('express')
-var app = express()
-var swig = require('swig')
-var mongoose = require('mongoose')
-var bodyParser = require('body-parser')
-var cookies = require('cookies')
-var User = require('./models/User')
+const express = require('express')
+const app = express()
+const swig = require('swig')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+const cookies = require('cookies')
+const User = require('./models/User')
+const fileStreamRotator = require('file-stream-rotator')
+const fs = require('fs')
+const path = require('path')
 const config = require('config-lite')(__dirname)
+const morgan = require('morgan')
 
-app.use('/public', express.static(__dirname + '/public'))
+const logDirectory = path.join(__dirname, 'log')
+
+// ensure log directory exists
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+
+// create a rotating write stream
+const accessLogStream = fileStreamRotator.getStream({
+  date_format: 'YYYYMMDD',
+  filename: path.join(logDirectory, 'access-%DATE%.log'),
+  frequency: 'daily',
+  verbose: false
+})
+
+app.use('/public', express.static(path.join(__dirname, 'public')))
 app.engine('html', swig.renderFile)
 app.set('views', './views')
 app.set('view engine', 'html')
+
+app.use(morgan('combined', { stream: accessLogStream }))
+
 app.use(bodyParser.urlencoded({extended: true}))
 app.use((req, res, next) => {
   req.cookies = new cookies(req, res)
