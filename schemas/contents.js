@@ -2,32 +2,32 @@ var mongoose = require('mongoose')
 
 module.exports = new mongoose.Schema({
   category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
   },
   title: String,
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   description: {
-      type: String,
-      default: '',
+    type: String,
+    default: ''
   },
   addTime: {
-      type: Date,
-      default: new Date()
+    type: Date,
+    default: new Date()
   },
   views: {
-      type: Number,
-      default: 0
+    type: Number,
+    default: 0
   },
   content: {
-      type: String,
-      default: '',
+    type: String,
+    default: ''
   },
   comments: {
-      type: Array,
-      default: []
+    type: Array,
+    default: []
   }
-})
+}, { usePushEach: true })

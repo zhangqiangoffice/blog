@@ -82,10 +82,6 @@ router.post('/user/login', (req, res, next) => {
       _id: userInfo._id,
       username: userInfo.username
     }
-    // req.cookies.set('userInfo', JSON.stringify({
-    //   _id: userInfo._id,
-    //   username: userInfo.username
-    // }))
 
     // 删除密码这种敏感信息，将用户信息存入 session
     const user = {
