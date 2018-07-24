@@ -9,6 +9,7 @@ const fileStreamRotator = require('file-stream-rotator')
 const fs = require('fs')
 const path = require('path')
 const config = require('config-lite')(__dirname)
+const routers = require('./routers')
 const morgan = require('morgan')
 const pkg = require('./package')
 
@@ -56,15 +57,14 @@ app.locals.blog = {
 }
 
 // 添加模板必需的三个变量
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   res.locals.user = req.session.user
   req.userInfo = req.session.user
   next()
 })
 
-app.use('/admin', require('./routers/admin'))
-app.use('/api', require('./routers/api'))
-app.use('/', require('./routers/main'))
+// 路由
+routers(app)
 
 mongoose.connect(config.mongodb, err => {
   if (err) {
