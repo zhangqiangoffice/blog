@@ -4,7 +4,7 @@ const swig = require('swig')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const session = require('express-session')
-const MongoStore = require('connect-mongo')(session)
+const RedisStore = require('connect-redis')(session)
 const fileStreamRotator = require('file-stream-rotator')
 const fs = require('fs')
 const path = require('path')
@@ -41,8 +41,10 @@ app.use(session({
   cookie: {
     maxAge: config.session.maxAge
   },
-  store: new MongoStore({
-    url: config.mongodb
+  store: new RedisStore({
+    url: config.session.storeUrl,
+    pass: config.storePass,
+    ttl: config.session.storeTtl
   })
 }))
 
