@@ -1,5 +1,5 @@
 {
-  "name": "blog",
+  "name": "z-blog",
   "version": "1.0.0",
   "description": "blog by node.js",
   "main": "app.js",
@@ -25,8 +25,9 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "config-lite": "2.1.0",
-    "cookies": "^0.7.1",
+    "connect-mongo": "2.0.1",
     "express": "^4.15.4",
+    "express-session": "1.15.6",
     "file-stream-rotator": "0.2.1",
     "markdown": "^0.5.0",
     "marked": "0.4.0",

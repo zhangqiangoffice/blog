@@ -5,7 +5,7 @@ var Content = require('../models/Content')
 
 var responseData = {}
 
-router.use( (req, res, next) => {
+router.use((req, res, next) => {
   responseData = {
     code: 0,
     message: ''
@@ -39,10 +39,10 @@ router.post('/user/register', (req, res, next) => {
     return
   }
 
-  User.findOne({username: username}).then( userInfo => {
+  User.findOne({username: username}).then(userInfo => {
     if (userInfo) {
       responseData.code = 4
-      responseData.message =  '该用户名已存在'
+      responseData.message = '该用户名已存在'
       res.json(responseData)
       return
     }
@@ -69,29 +69,39 @@ router.post('/user/login', (req, res, next) => {
     return
   }
 
-  User.findOne({username: username, password: password}).then( userInfo => {
+  User.findOne({username: username, password: password}).then(userInfo => {
     if (!userInfo) {
       responseData.code = 2
-      responseData.message =  '用户名或者密码错误'
+      responseData.message = '用户名或者密码错误'
       res.json(responseData)
       return
     }
     responseData.message = '登录成功'
+
     responseData.userInfo = {
       _id: userInfo._id,
       username: userInfo.username
     }
-    req.cookies.set('userInfo', JSON.stringify({
+    // req.cookies.set('userInfo', JSON.stringify({
+    //   _id: userInfo._id,
+    //   username: userInfo.username
+    // }))
+
+    // 删除密码这种敏感信息，将用户信息存入 session
+    const user = {
       _id: userInfo._id,
-      username: userInfo.username
-    }))
+      username: userInfo.username,
+      isAdmin: Boolean(userInfo.isAdmin)
+    }
+    req.session.user = user
+
     res.json(responseData)
-    return
   })
 })
 
 router.get('/user/logout', (req, res, next) => {
-  req.cookies.set('userInfo', null)
+  // 清空 session 中用户信息
+  req.session.user = null
   res.json(responseData)
 })
 
@@ -111,7 +121,7 @@ router.post('/comment/post', (req, res, next) => {
     postTime: new Date(),
     content: req.body.content
   }
-  
+
   Content.findOne({_id: contentId}).then(content => {
     content.comments.push(postData)
     return content.save()
@@ -120,8 +130,6 @@ router.post('/comment/post', (req, res, next) => {
     responseData.comments = newContent.comments
     res.json(responseData)
   })
-
-
 })
 
 module.exports = router

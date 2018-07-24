@@ -3,13 +3,14 @@ const app = express()
 const swig = require('swig')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const cookies = require('cookies')
-const User = require('./models/User')
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
 const fileStreamRotator = require('file-stream-rotator')
 const fs = require('fs')
 const path = require('path')
 const config = require('config-lite')(__dirname)
 const morgan = require('morgan')
+const pkg = require('./package')
 
 const logDirectory = path.join(__dirname, 'log')
 
@@ -31,28 +32,35 @@ app.set('view engine', 'html')
 
 app.use(morgan('combined', { stream: accessLogStream }))
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use((req, res, next) => {
-  req.cookies = new cookies(req, res)
-  req.userInfo = {}
-  var cookiesUserInfo = req.cookies.get('userInfo')
-  if (cookiesUserInfo) {
-    try {
-      req.userInfo = JSON.parse(cookiesUserInfo)
+app.use(session({
+  name: config.session.key,
+  secret: config.session.secret,
+  resave: true,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: config.session.maxAge
+  },
+  store: new MongoStore({
+    url: config.mongodb
+  })
+}))
 
-      User.findById(req.userInfo._id).then(userInfo => {
-        req.userInfo.isAdmin = Boolean(userInfo.isAdmin)
-        next()
-      })
-    } catch (e) {
-      next()
-    }
-  } else {
-    next()
-  }
-})
+app.use(bodyParser.urlencoded({extended: true}))
 
 swig.setDefaults({cache: false})
+
+// 设置模板全局常量
+app.locals.blog = {
+  title: pkg.name,
+  description: pkg.description
+}
+
+// 添加模板必需的三个变量
+app.use(function (req, res, next) {
+  res.locals.user = req.session.user
+  req.userInfo = req.session.user
+  next()
+})
 
 app.use('/admin', require('./routers/admin'))
 app.use('/api', require('./routers/api'))
