@@ -68,6 +68,12 @@ app.use((req, res, next) => {
 // 路由
 routers(app)
 
+// 错误处理
+app.use(function (err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
+
 mongoose.connect(config.mongodb, err => {
   if (err) {
     console.log('数据库连接失败')
