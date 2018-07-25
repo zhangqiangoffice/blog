@@ -49,7 +49,7 @@ router.get('/view', (req, res) => {
 
   Content.findOne({_id: contentId}).then(content => {
     data.content = content
-
+    data.category = content.category
     content.views++
     content.save()
     data.textHtmlStr = marked(content.content)
