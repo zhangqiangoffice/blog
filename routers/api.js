@@ -1,9 +1,16 @@
-var express = require('express')
-var router = express.Router()
-var User = require('../models/User')
-var Content = require('../models/Content')
+const express = require('express')
+const router = express.Router()
+const User = require('../models/User')
+const Content = require('../models/Content')
+const crypto = require('crypto')
 
-var responseData = {}
+const encryptPassword = (password, salt) => {
+  const hash = crypto.createHash('sha256')
+  hash.update(password + salt)
+  return hash.digest('hex')
+}
+
+let responseData = {}
 
 router.use((req, res, next) => {
   responseData = {
@@ -49,7 +56,7 @@ router.post('/user/register', (req, res, next) => {
 
     var user = new User({
       username: username,
-      password: password
+      password: encryptPassword(password, username)
     })
     return user.save()
   }).then(newUserInfo => {
@@ -69,7 +76,7 @@ router.post('/user/login', (req, res, next) => {
     return
   }
 
-  User.findOne({username: username, password: password}).then(userInfo => {
+  User.findOne({ username, password: encryptPassword(password, username) }).then(userInfo => {
     if (!userInfo) {
       responseData.code = 2
       responseData.message = '用户名或者密码错误'
