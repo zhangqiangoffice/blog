@@ -60,4 +60,5 @@ typings/
 db/
 
 config/*
+!config/production.*
 !config/default.*
