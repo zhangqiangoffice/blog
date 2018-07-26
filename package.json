@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development supervisor index",
-    "start": "NODE_ENV=production pm2 start index.js --name 'z-blog'",
-    "heroku": "NODE_ENV=production node index"
+    "start": "NODE_ENV=development pm2 start index.js --name 'z-blog'",
+    "heroku": "node index"
   },
   "repository": {
     "type": "git",
