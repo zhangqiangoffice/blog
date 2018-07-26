@@ -42,8 +42,8 @@ app.use(session({
     maxAge: config.session.maxAge
   },
   store: new RedisStore({
-    url: config.session.storeUrl,
-    pass: config.storePass,
+    url: process.env.STORE_URL || config.storeUrl,
+    pass: process.env.STORE_PASS || config.storePass,
     ttl: config.session.storeTtl
   })
 }))
@@ -74,7 +74,7 @@ app.use(function (err, req, res, next) {
   res.status(500).send('Something broke!')
 })
 
-mongoose.connect(config.mongodb, err => {
+mongoose.connect(process.env.MONGODB || config.mongodb, err => {
   if (err) {
     console.log('数据库连接失败')
   } else {
