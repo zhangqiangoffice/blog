@@ -102,6 +102,60 @@ router.post('/user/login', (req, res, next) => {
   })
 })
 
+router.post('/user/dashboardLogin', (req, res, next) => {
+  var username = req.body.username
+  var password = req.body.password
+
+  if (username === '' || password === '') {
+    responseData.code = 1
+    responseData.message = '用户名或者密码不得为空'
+    res.json(responseData)
+    return
+  }
+
+  User.findOne({ username, password: encryptPassword(password, username) }).then(userInfo => {
+    if (!userInfo) {
+      responseData.code = 2
+      responseData.message = '用户名或者密码错误'
+      res.json(responseData)
+      return
+    }
+
+    if (!userInfo.isAdmin) {
+      responseData.code = 3
+      responseData.message = '必须是管理员才能登录后台管理系统'
+      res.json(responseData)
+      return
+    }
+
+    responseData.message = '登录成功'
+
+    responseData.userInfo = {
+      _id: userInfo._id,
+      username: userInfo.username
+    }
+
+    // 删除密码这种敏感信息，将用户信息存入 session
+    const user = {
+      _id: userInfo._id,
+      username: userInfo.username,
+      isAdmin: Boolean(userInfo.isAdmin)
+    }
+    req.session.user = user
+
+    res.json(responseData)
+  })
+})
+
+router.get('/user/checkAdminLogin', (req, res, next) => {
+  if (req.userInfo && req.userInfo.isAdmin) {
+    responseData.userInfo = req.userInfo
+  } else {
+    responseData.code = 1
+  }
+  res.json(responseData)
+})
+
 router.get('/user/logout', (req, res, next) => {
   // 清空 session 中用户信息
   req.session.user = null

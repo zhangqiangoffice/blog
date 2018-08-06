@@ -1,9 +1,9 @@
 module.exports = {
-  port: 8082,
+  port: 8083,
   session: {
     secret: 'z-blog',
     key: 'z-blog',
-    maxAge: 20 * 60 * 1000,
+    maxAge: null,
     storeTtl: 20 * 60
   },
   storeUrl: 'redis://redis.com:27017',
