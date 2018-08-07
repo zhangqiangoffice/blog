@@ -56,7 +56,8 @@ router.post('/user/register', (req, res, next) => {
 
     var user = new User({
       username: username,
-      password: encryptPassword(password, username)
+      password: encryptPassword(password, username),
+      registerDate: new Date()
     })
     return user.save()
   }).then(newUserInfo => {

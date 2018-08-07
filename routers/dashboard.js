@@ -29,13 +29,13 @@ router.get('/users', (req, res, next) => {
   const limit = Number(req.query.limit) || 10
   let pages = 0
 
-  User.count().then(total => {
+  User.estimatedDocumentCount().then(total => {
     pages = Math.ceil(total / limit)
     page = Math.min(page, pages)
     page = Math.max(page, 1)
     var skip = (page - 1) * limit
 
-    User.find().limit(limit).skip(skip).then(users => {
+    User.find({}, { password: 0 }).limit(limit).skip(skip).then(users => {
       res.json({ ...responseData, list: users, total, page, limit })
     })
   })
