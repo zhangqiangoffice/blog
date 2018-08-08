@@ -16,6 +16,7 @@ router.use((req, res, next) => {
 
 router.use((req, res, next) => {
   if (!req.session.user || !req.session.user.isAdmin) {
+    res.statusCode = 403
     responseData.code = 1
     responseData.message = '对不起，只有管理员才可以进入后台管理'
     res.json(responseData)
