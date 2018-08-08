@@ -9,7 +9,7 @@ let responseData = {}
 router.use((req, res, next) => {
   responseData = {
     code: 0,
-    message: ''
+    message: '成功'
   }
   next()
 })
@@ -35,7 +35,7 @@ router.get('/users', (req, res, next) => {
     page = Math.max(page, 1)
     var skip = (page - 1) * limit
 
-    User.find({}, { password: 0 }).limit(limit).skip(skip).then(users => {
+    User.find({}, { password: 0 }).lean().limit(limit).skip(skip).then(users => {
       res.json({ ...responseData, list: users, total, page, limit })
     })
   })
