@@ -41,6 +41,13 @@ router.param('user_id', function (req, res, next, id) {
   next()
 })
 
+router.param('category_id', function (req, res, next, id) {
+  req.category = {
+    id
+  }
+  next()
+})
+
 router.get('/users', (req, res, next) => {
   let page = Number(req.query.page) || 1
   const limit = Number(req.query.limit) || 10
@@ -74,6 +81,14 @@ router.get('/categories', (req, res) => {
     Category.find().lean().sort({_id: -1}).limit(limit).skip(skip).then(categories => {
       res.json({ ...responseData, list: categories, total, page, limit })
     })
+  })
+})
+
+router.delete('/categories/:category_id', (req, res, next) => {
+  var id = req.category.id || ''
+
+  Category.remove({ _id: id }).then(() => {
+    res.json(responseData)
   })
 })
 
