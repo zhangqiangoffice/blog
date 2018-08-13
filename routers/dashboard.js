@@ -25,6 +25,13 @@ router.use((req, res, next) => {
   next()
 })
 
+router.param('user_id', function (req, res, next, id) {
+  req.user = {
+    id
+  }
+  next()
+})
+
 router.get('/users', (req, res, next) => {
   let page = Number(req.query.page) || 1
   const limit = Number(req.query.limit) || 10
@@ -39,6 +46,14 @@ router.get('/users', (req, res, next) => {
     User.find({}, { password: 0 }).lean().limit(limit).skip(skip).then(users => {
       res.json({ ...responseData, list: users, total, page, limit })
     })
+  })
+})
+
+router.delete('/users/:user_id', (req, res, next) => {
+  var id = req.user.id || ''
+
+  User.remove({ _id: id }).then(() => {
+    res.json(responseData)
   })
 })
 
