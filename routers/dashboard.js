@@ -4,6 +4,15 @@ var User = require('../models/User')
 var Category = require('../models/Category')
 var Content = require('../models/Content')
 
+const calcPage = (page = 1, total, limit) => {
+  const pages = Math.ceil(total / limit) || 0
+  page = Math.min(page, pages)
+  page = Math.max(page, 1)
+  return page
+}
+
+const calcSkip = (page, limit) => (page - 1) * limit
+
 let responseData = {}
 
 router.use((req, res, next) => {
@@ -35,13 +44,10 @@ router.param('user_id', function (req, res, next, id) {
 router.get('/users', (req, res, next) => {
   let page = Number(req.query.page) || 1
   const limit = Number(req.query.limit) || 10
-  let pages = 0
 
   User.estimatedDocumentCount().then(total => {
-    pages = Math.ceil(total / limit)
-    page = Math.min(page, pages)
-    page = Math.max(page, 1)
-    var skip = (page - 1) * limit
+    page = calcPage(page, total, limit)
+    const skip = calcSkip(page, limit)
 
     User.find({}, { password: 0 }).lean().limit(limit).skip(skip).then(users => {
       res.json({ ...responseData, list: users, total, page, limit })
@@ -57,26 +63,16 @@ router.delete('/users/:user_id', (req, res, next) => {
   })
 })
 
-router.get('/category', (req, res) => {
-  var page = Number(req.query.page) || 1
-  var limit = 10
-  var pages = 0
+router.get('/categories', (req, res) => {
+  let page = Number(req.query.page) || 1
+  const limit = Number(req.query.limit) || 10
 
-  Category.count().then(count => {
-    pages = Math.ceil(count / limit)
-    page = Math.min(page, pages)
-    page = Math.max(page, 1)
-    var skip = (page - 1) * limit
+  Category.estimatedDocumentCount().then(total => {
+    page = calcPage(page, total, limit)
+    const skip = calcSkip(page, limit)
 
-    Category.find().sort({_id: -1}).limit(limit).skip(skip).then(categories => {
-      res.render('admin/category_index', {
-        userInfo: req.userInfo,
-        categories: categories,
-        page: page,
-        count: count,
-        limit: limit,
-        pages: pages
-      })
+    Category.find().lean().sort({_id: -1}).limit(limit).skip(skip).then(categories => {
+      res.json({ ...responseData, list: categories, total, page, limit })
     })
   })
 })
