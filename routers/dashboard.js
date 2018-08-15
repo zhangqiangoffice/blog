@@ -55,6 +55,13 @@ router.param('category_id', function (req, res, next, id) {
   next()
 })
 
+router.param('content_id', function (req, res, next, id) {
+  req.content = {
+    id
+  }
+  next()
+})
+
 router.get('/users', (req, res, next) => {
   let page = Number(req.query.page) || 1
   const limit = Number(req.query.limit) || 10
@@ -161,6 +168,30 @@ router.post('/categories', (req, res) => {
         res.json(responseData)
       })
     }
+  })
+})
+
+router.get('/contents', (req, res) => {
+  let page = Number(req.query.page) || 1
+  const limit = Number(req.query.limit) || 10
+
+  Content.estimatedDocumentCount().then(total => {
+    page = calcPage(page, total, limit)
+    const skip = calcSkip(page, limit)
+
+    Content.find().lean().sort({ _id: -1 }).limit(limit).skip(skip).populate(['category', 'user']).exec((err, result) => {
+      if (err) res.json(handleError(err))
+      res.json({ ...responseData, list: result, total, page, limit })
+    })
+  })
+})
+
+router.delete('/contents/:content_id', (req, res) => {
+  var id = req.content.id || ''
+
+  Content.deleteOne({ _id: id }, (err, result) => {
+    if (err) res.json(handleError(err))
+    res.json(responseData)
   })
 })
 
