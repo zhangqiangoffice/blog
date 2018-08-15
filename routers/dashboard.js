@@ -91,7 +91,7 @@ router.get('/categories', (req, res) => {
   })
 })
 
-router.delete('/categories/:category_id', (req, res, next) => {
+router.delete('/categories/:category_id', (req, res) => {
   var id = req.category.id || ''
 
   Category.remove({ _id: id }).then(() => {
@@ -99,7 +99,7 @@ router.delete('/categories/:category_id', (req, res, next) => {
   })
 })
 
-router.put('/categories/:category_id', (req, res, next) => {
+router.put('/categories/:category_id', (req, res) => {
   var id = req.category.id || ''
   var name = req.body.name || ''
 
@@ -134,6 +134,31 @@ router.put('/categories/:category_id', (req, res, next) => {
             res.json(responseData)
           })
         }
+      })
+    }
+  })
+})
+
+router.post('/categories', (req, res) => {
+  var name = req.body.name || ''
+
+  if (name === '') {
+    responseData.code = 1
+    responseData.message = '分类名称不能为空！'
+    res.json(responseData)
+  }
+
+  Category.findOne({ name: name }, (err, result) => {
+    if (err) res.json(handleError(err))
+    if (result) {
+      responseData.code = 2
+      responseData.message = '分类已经存在！'
+      res.json(responseData)
+    } else {
+      new Category({ name: name }).save((err, result) => {
+        if (err) res.json(handleError(err))
+        responseData.category = result
+        res.json(responseData)
       })
     }
   })
