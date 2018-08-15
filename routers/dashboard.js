@@ -179,7 +179,7 @@ router.get('/contents', (req, res) => {
     page = calcPage(page, total, limit)
     const skip = calcSkip(page, limit)
 
-    Content.find().lean().sort({ _id: -1 }).limit(limit).skip(skip).populate(['category', 'user']).exec((err, result) => {
+    Content.find().lean().sort({ _id: -1 }).limit(limit).skip(skip).populate(['category', 'author']).exec((err, result) => {
       if (err) res.json(handleError(err))
       res.json({ ...responseData, list: result, total, page, limit })
     })
@@ -190,6 +190,28 @@ router.delete('/contents/:content_id', (req, res) => {
   var id = req.content.id || ''
 
   Content.deleteOne({ _id: id }, (err, result) => {
+    if (err) res.json(handleError(err))
+    res.json(responseData)
+  })
+})
+
+router.post('/contents', (req, res) => {
+  const { category, title, description, content } = req.body
+
+  if (!category || !title || !description || !content) {
+    responseData.code = 1
+    responseData.message = '文章内容字段不全'
+    res.json(responseData)
+  }
+
+  new Content({
+    category,
+    title,
+    description,
+    content,
+    author: req.session.user._id.toString(),
+    addTime: new Date()
+  }).save((err, result) => {
     if (err) res.json(handleError(err))
     res.json(responseData)
   })

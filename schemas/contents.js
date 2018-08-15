@@ -6,7 +6,7 @@ module.exports = new mongoose.Schema({
     ref: 'Category'
   },
   title: String,
-  user: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
@@ -15,8 +15,7 @@ module.exports = new mongoose.Schema({
     default: ''
   },
   addTime: {
-    type: Date,
-    default: new Date()
+    type: Date
   },
   views: {
     type: Number,
