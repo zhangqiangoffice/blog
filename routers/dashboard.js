@@ -11,6 +11,13 @@ const calcPage = (page = 1, total, limit) => {
   return page
 }
 
+const handleError = err => {
+  return {
+    code: 99,
+    message: err.toString()
+  }
+}
+
 const calcSkip = (page, limit) => (page - 1) * limit
 
 let responseData = {}
@@ -89,6 +96,46 @@ router.delete('/categories/:category_id', (req, res, next) => {
 
   Category.remove({ _id: id }).then(() => {
     res.json(responseData)
+  })
+})
+
+router.put('/categories/:category_id', (req, res, next) => {
+  var id = req.category.id || ''
+  var name = req.body.name || ''
+
+  if (name === '') {
+    responseData.code = 1
+    responseData.message = '分类名称不能为空！'
+    res.json(responseData)
+  }
+
+  Category.findOne({ _id: id }, (err, result) => {
+    if (err) {
+      res.json(handleError(err))
+    }
+    if (!result) {
+      responseData.code = 2
+      responseData.message = '分类信息不存在！'
+      res.json(responseData)
+    } else {
+      Category.findOne({ _id: { $ne: id }, name: name }, (err, result) => {
+        if (err) {
+          res.json(handleError(err))
+        }
+        if (result) {
+          responseData.code = 3
+          responseData.message = '数据库中已经存在同名分类了！'
+          res.json(responseData)
+        } else {
+          Category.update({ _id: id }, { name: name }, (err, result) => {
+            if (err) {
+              res.json(handleError(err))
+            }
+            res.json(responseData)
+          })
+        }
+      })
+    }
   })
 })
 
