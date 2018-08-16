@@ -1,0 +1,1 @@
+.overlay{background-color:rgba(0,0,0,.1);bottom:0;left:0;overflow:hidden;position:absolute;right:0;top:0;z-index:1}.content{-webkit-transform:translateY(-50%) translateX(-50%);left:50%;margin:auto;position:absolute;top:50%;transform:translateY(-50%) translateX(-50%);width:30%}.msg-alert{bottom:20px;right:20px;z-index:1}

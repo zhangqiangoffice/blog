@@ -32,21 +32,21 @@
       <div class="rightBox" id="userInfo">
         <div class="boxTitle"><span>用户信息</span></div>
         <p>你好，<span class="username">{{ userInfo.username }}</span></p>
-        
+
         {% if userInfo.isAdmin %}
-        
-        <p>你是管理员，前往 <a href="/admin">管理页面</a></p>
-    
+
+        <p>你是管理员，前往 <a href="/dashboard">管理页面</a></p>
+
         {% else %}
-    
+
         <p>欢迎来到我的博客</p>
-    
+
         {% endif %}
         <a href="javascript:;" id="logout">退出</a>
       </div>
-    
+
       {% else %}
-    
+
       <div class="rightBox" id="registerBox" style="display: none">
         <div class="boxTitle"><span>注册</span></div>
         <table class="form_table">
@@ -75,7 +75,7 @@
         </table>
         <span class="tip"></span>
       </div>
-    
+
       <div class="rightBox" id="loginBox">
         <div class="boxTitle"><span>登录</span></div>
         <table class="form_table">
@@ -100,7 +100,7 @@
         </table>
         <span class="tip"></span>
       </div>
-    
+
       {% endif %}
     </div>
   </div>

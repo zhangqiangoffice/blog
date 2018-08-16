@@ -62,6 +62,10 @@ router.param('content_id', function (req, res, next, id) {
   next()
 })
 
+router.get('/', (req, res, next) => {
+  res.render('dashboard/index')
+})
+
 router.get('/users', (req, res, next) => {
   let page = Number(req.query.page) || 1
   const limit = Number(req.query.limit) || 10
