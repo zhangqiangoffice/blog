@@ -1,52 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="/public/css/index.css" >
-  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <title>博客</title>
-</head>
-<body>
-  <header>
-    <div class="backimg"><img src="/public/img/backimg.jpg" alt="backimg"></div>
-  </header>
-  <nav>
-    <div class="menu">
-      <a {% if category == '' %}class="active"{% endif %} href="/">首页</a>
-      {% for cate in categories %}
-      <a href="/?category={{cate.id}}" {% if category == cate.id %}class="active"{% endif %}>{{ cate.name }}</a>
-      {% endfor %}
-    </div>
-  </nav>
-
-  <div class="main">
-    <div class="left">
-        {% block content %}{% endblock %}
     </div>
     <div class="right">
-      {% if userInfo._id %}
+    <% if (userInfo) { %>
       <div class="rightBox" id="userInfo">
         <div class="boxTitle"><span>用户信息</span></div>
-        <p>你好，<span class="username">{{ userInfo.username }}</span></p>
+        <p>你好，<span class="username"><%= userInfo.username %></span></p>
 
-        {% if userInfo.isAdmin %}
+        <% if (userInfo.isAdmin) { %>
 
         <p>你是管理员，前往 <a href="/dashboard">管理页面</a></p>
 
-        {% else %}
+        <% } else { %>
 
         <p>欢迎来到我的博客</p>
 
-        {% endif %}
+        <% } %>
         <a href="javascript:;" id="logout">退出</a>
       </div>
-
-      {% else %}
-
+    <% } else { %>
       <div class="rightBox" id="registerBox" style="display: none">
         <div class="boxTitle"><span>注册</span></div>
         <table class="form_table">
@@ -100,8 +70,7 @@
         </table>
         <span class="tip"></span>
       </div>
-
-      {% endif %}
+    <% } %>
     </div>
   </div>
 

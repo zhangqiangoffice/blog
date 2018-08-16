@@ -1,0 +1,36 @@
+<%- include('header') -%>
+
+<div class="list_box">
+  <h1><%= content.title %></h1>
+  <p class="col_default">
+    作者：<span><%= content.author && content.author.username %></span> -
+    时间：<span><%= formatDate(content.addTime) %></span> -
+    阅读：<span><%= content.views %></span> -
+    评论：<span><%= content.comments.length %></span>
+  </p>
+  <p><%- marked(content.content) %></p>
+</div>
+
+<div class="list_box message">
+    <h3>
+        <strong>评论</strong>
+        <span class="em">一共有 <em class="message_count"><%= content.comments.length %></em> 条评论</span>
+        <input type="hidden" id="content_id" value="<%=content.id%>">
+    </h3>
+
+    <% if (userInfo) { %>
+    <p class="text_input clearfix">
+        <textarea name="" id="message_content" cols="30" rows="10"></textarea>
+        <button id="message_btn" class="submit">提交</button>
+    </p>
+    <% } else { %>
+    <div class="alert alert-danger" role="alert">你还没有登录，<strong>请先登录！</strong></div>
+    <% } %>
+
+    <div id="message_list"></div>
+
+</div>
+
+<script src="/public/js/comment.js"></script>
+
+<%- include('footer') -%>

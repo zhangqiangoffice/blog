@@ -1,6 +1,5 @@
 const express = require('express')
 const app = express()
-const swig = require('swig')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const session = require('express-session')
@@ -29,9 +28,8 @@ const accessLogStream = fileStreamRotator.getStream({
 app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use('/favicon.ico', express.static(path.join(__dirname, 'public/img/favicon.ico')))
 
-app.engine('html', swig.renderFile)
 app.set('views', './views')
-app.set('view engine', 'html')
+app.set('view engine', 'ejs')
 
 app.use(morgan('combined', { stream: accessLogStream }))
 
@@ -51,8 +49,6 @@ app.use(session({
 }))
 
 app.use(bodyParser.urlencoded({extended: true}))
-
-swig.setDefaults({cache: false})
 
 // 设置模板全局常量
 app.locals.blog = {
