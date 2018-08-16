@@ -45,7 +45,7 @@ router.get('/', (req, res, next) => {
     data.page = Math.max(data.page, 1)
     var skip = (data.page - 1) * data.limit
 
-    return Content.where(where).find().sort({_id: -1}).limit(data.limit).skip(skip).populate(['category', 'author']).sort({addTime: -1})
+    return Content.where(where).find().sort({_id: -1}).limit(data.limit).skip(skip).populate(['author']).sort({addTime: -1})
   }).then((contents) => {
     data.contents = contents
     res.render('main/index', data)
@@ -55,7 +55,7 @@ router.get('/', (req, res, next) => {
 router.get('/view', (req, res) => {
   var contentId = req.query.contentid || ''
 
-  Content.findOne({ _id: contentId }).populate(['category', 'author']).then(content => {
+  Content.findOne({ _id: contentId }).populate(['author']).then(content => {
     data.content = content
     data.category = content.category
     content.views++
