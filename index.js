@@ -27,6 +27,8 @@ const accessLogStream = fileStreamRotator.getStream({
 })
 
 app.use('/public', express.static(path.join(__dirname, 'public')))
+app.use('/favicon.ico', express.static(path.join(__dirname, 'public/img/favicon.ico')))
+
 app.engine('html', swig.renderFile)
 app.set('views', './views')
 app.set('view engine', 'html')
