@@ -31,6 +31,22 @@
 
 </div>
 
+<ul>
+  <% if (prev) { %>
+  <li>
+    <span>上一篇</span>
+    <a href="/view?contentid=<%= prev._id %>"><%= prev.title %></a>
+  </li>
+  <% } %>
+
+  <% if (next) { %>
+  <li>
+    <span>下一篇</span>
+    <a href="/view?contentid=<%= next._id %>"><%= next.title %></a>
+  </li>
+  <% } %>
+</ul>
+
 <script src="/public/js/comment.js"></script>
 
 <%- include('footer') -%>
