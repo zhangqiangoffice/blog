@@ -4,7 +4,7 @@ module.exports = {
     secret: 'z-blog',
     key: 'z-blog',
     maxAge: null,
-    storeTtl: 20 * 60
+    storeTtl: 30 * 60
   },
   storeUrl: 'redis://redis.com:27017',
   storePass: 'password',
