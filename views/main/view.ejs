@@ -8,6 +8,7 @@
     阅读：<span><%= content.views %></span> -
     评论：<span><%= content.comments.length %></span>
   </p>
+  <blockquote><%- marked(content.description) %></blockquote>
   <p><%- marked(content.content) %></p>
 </div>
 
