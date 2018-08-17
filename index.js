@@ -72,7 +72,7 @@ app.use(function (err, req, res, next) {
   res.status(500).send('Something broke!')
 })
 
-mongoose.connect(process.env.MONGODB || config.mongodb, err => {
+mongoose.connect(process.env.MONGODB || config.mongodb, { useNewUrlParser: true }, err => {
   if (err) {
     console.log('数据库连接失败')
   } else {

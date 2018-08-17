@@ -1,9 +1,9 @@
-$(document).ready(function(){
-  $registerBox = $('#registerBox');
-  $loginBox = $('#loginBox');
-  $userInfo = $('#userInfo');
+$(document).ready(function () {
+  var $registerBox = $('#registerBox')
+  var $loginBox = $('#loginBox')
+  var $userInfo = $('#userInfo')
 
-  $registerBox.find('button').on('click', function(){
+  $registerBox.find('button').on('click', function () {
     $.ajax({
       type: 'post',
       url: 'api/user/register',
@@ -13,7 +13,7 @@ $(document).ready(function(){
         repassword: $registerBox.find('[name = "repassword"]').val()
       },
       dataType: 'json',
-      success: function(msg) {
+      success: function (msg) {
         $registerBox.find('.tip').html(msg.message)
         if (!msg.code) {
           setTimeout(() => {
@@ -25,16 +25,16 @@ $(document).ready(function(){
     })
   })
 
-  $loginBox.find('button').on('click', function(){
+  $loginBox.find('button').on('click', function () {
     $.ajax({
       type: 'post',
       url: 'api/user/login',
       data: {
         username: $loginBox.find('[name="username"]').val(),
-        password: $loginBox.find('[name="password"]').val(),
+        password: $loginBox.find('[name="password"]').val()
       },
       dataType: 'json',
-      success: function(msg) {
+      success: function (msg) {
         $loginBox.find('.tip').html(msg.message)
         if (!msg.code) {
           setTimeout(() => {
@@ -45,12 +45,12 @@ $(document).ready(function(){
     })
   })
 
-  $('#logout').click(function(){
+  $('#logout').click(function () {
     $.ajax({
       type: 'get',
       url: 'api/user/logout',
       dataType: 'json',
-      success: function(msg) {
+      success: function (msg) {
         if (!msg.code) {
           window.location.reload()
         }
@@ -58,13 +58,21 @@ $(document).ready(function(){
     })
   })
 
-  $('#toLogin').click(function(){
+  $('#toLogin').click(function () {
     $loginBox.show()
     $registerBox.hide()
   })
 
-  $('#toRegister').click(function(){
+  $('#toRegister').click(function () {
     $loginBox.hide()
     $registerBox.show()
   })
+
+  // node-waves的效果
+  if (Waves) {
+    Waves.attach('.waves-btn', ['waves-button'])
+    Waves.init()
+  } else {
+    console.log('Waves is not found!')
+  }
 })
