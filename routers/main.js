@@ -55,26 +55,19 @@ router.get('/', (req, res, next) => {
 router.get('/view', (req, res) => {
   var contentId = req.query.contentid || ''
 
-  Content.findOne({ _id: contentId }).populate('author').exec((err, result) => {
-    if (!err) {
-      const { category } = result
-      data.content = result
-      data.category = category
-      result.views++
-      result.save()
+  Content.findOne({ _id: contentId }).populate('author').then(result => {
+    const { category } = result
+    data.content = result
+    data.category = category
+    result.views++
+    result.save()
 
-      Content.findOne({ '_id': { '$gt': contentId }, category }, (err, result) => {
-        if (!err) {
-          data.prev = result
-          Content.findOne({ '_id': { '$lt': contentId }, category }, (err, result) => {
-            if (!err) {
-              data.next = result
-              res.render('main/view', data)
-            }
-          })
-        }
+    Promise.all([Content.findOne({ '_id': { '$gt': contentId }, category }).exec(), Content.findOne({ '_id': { '$lt': contentId }, category }).exec()])
+      .then(([prevOne, nextOne]) => {
+        data.prev = prevOne
+        data.next = nextOne
+        res.render('main/view', data)
       })
-    }
   })
 })
 

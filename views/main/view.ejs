@@ -11,6 +11,22 @@
   <p><%- marked(content.content) %></p>
 </div>
 
+<nav class="content_nav">
+  <% if (prev) { %>
+  <div class="prev">
+    <span>上一篇：</span>
+    <a href="/view?contentid=<%= prev._id %>"><%= prev.title %></a>
+  </div>
+  <% } %>
+
+  <% if (next) { %>
+  <div class="next">
+    <span>下一篇：</span>
+    <a href="/view?contentid=<%= next._id %>"><%= next.title %></a>
+  </div>
+  <% } %>
+</nav>
+
 <div class="list_box message">
     <h3>
         <strong>评论</strong>
@@ -30,22 +46,6 @@
     <div id="message_list"></div>
 
 </div>
-
-<ul>
-  <% if (prev) { %>
-  <li>
-    <span>上一篇</span>
-    <a href="/view?contentid=<%= prev._id %>"><%= prev.title %></a>
-  </li>
-  <% } %>
-
-  <% if (next) { %>
-  <li>
-    <span>下一篇</span>
-    <a href="/view?contentid=<%= next._id %>"><%= next.title %></a>
-  </li>
-  <% } %>
-</ul>
 
 <script src="/public/js/comment.js"></script>
 
