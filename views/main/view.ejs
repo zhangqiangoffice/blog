@@ -9,23 +9,23 @@
     评论：<span><%= content.comments.length %></span>
   </p>
   <blockquote><%- marked(content.description) %></blockquote>
-  <p><%- marked(content.content) %></p>
+  <div class="article"><%- marked(content.content) %></div>
 </div>
 
 <nav class="content_nav">
-  <% if (prev) { %>
   <div class="prev">
+    <% if (prev) { %>
     <span>上一篇：</span>
     <a href="/view?contentid=<%= prev._id %>"><%= prev.title %></a>
+    <% } %>
   </div>
-  <% } %>
 
-  <% if (next) { %>
   <div class="next">
+    <% if (next) { %>
     <span>下一篇：</span>
     <a href="/view?contentid=<%= next._id %>"><%= next.title %></a>
+    <% } %>
   </div>
-  <% } %>
 </nav>
 
 <div class="list_box message">

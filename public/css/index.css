@@ -207,3 +207,7 @@ body {
   display: -ms-flexbox;
   display: flex;
 }
+
+.article p {
+  text-indent:2em
+}

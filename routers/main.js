@@ -27,15 +27,16 @@ router.use((req, res, next) => {
 })
 
 router.get('/', (req, res, next) => {
-  data.category = req.query.category || ''
+  const category = req.query.category || ''
+  data.category = category
   data.count = 0
   data.page = Number(req.query.page || 1)
   data.limit = 10
   data.pages = 0
 
   var where = {}
-  if (data.category) {
-    where.category = data.category
+  if (category) {
+    where.category = category
   }
 
   Content.where(where).estimatedDocumentCount().then(count => {
@@ -45,7 +46,7 @@ router.get('/', (req, res, next) => {
     data.page = Math.max(data.page, 1)
     var skip = (data.page - 1) * data.limit
 
-    return Content.where(where).find().sort({_id: -1}).limit(data.limit).skip(skip).populate(['author']).sort({addTime: -1})
+    return Content.where(where).find().sort({addTime: -1}).limit(data.limit).skip(skip).populate(['author'])
   }).then((contents) => {
     data.contents = contents
     res.render('main/index', data)
@@ -62,7 +63,7 @@ router.get('/view', (req, res) => {
     result.views++
     result.save()
 
-    Promise.all([Content.findOne({ '_id': { '$gt': contentId }, category }).exec(), Content.findOne({ '_id': { '$lt': contentId }, category }).exec()])
+    Promise.all([Content.findOne({ '_id': { '$gt': contentId }, category }).sort({ addTime: -1 }).exec(), Content.findOne({ '_id': { '$lt': contentId }, category }).sort({ addTime: -1 }).exec()])
       .then(([prevOne, nextOne]) => {
         data.prev = prevOne
         data.next = nextOne
